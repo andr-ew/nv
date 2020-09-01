@@ -21,11 +21,11 @@ function nv.init(count)
 
     for i = 1, count do
         nv.vc[i] = {}
-        nv.vc.hz = 0
-        nv.vc.peak = 0
+        nv.vc[i].hz = 0
+        nv.vc[i].peak = 0
 
-        nv.vc.id = nil
-        nv.vc.active = 0
+        nv.vc[i].id = nil
+        nv.vc[i].active = 0
 
         for _,v in ipairs(nv.list) do 
             nv.vc[i][v] = 0
@@ -42,8 +42,11 @@ end
 function nv.update() 
     for i,vc in ipairs(nv.vc) do 
         print('vc ' .. i)
-        for k,v in pairs(vc) do
-            print(k .. ' ' .. v)
+        print('hz ' .. nv.all.hz * vc.hz)
+        print('peak ' .. nv.all.peak + vc.peak)
+
+        for _,v in pairs(nv.list) do
+            print(v .. ' ' .. vc[v] + nv.all[v])
         end    
     end 
 end 

@@ -13,7 +13,7 @@ n voice library
 
 `.peak` : required prameter, specifies the peak of an envelope or volume of a sound
 
-`vc.list` : list of parameter keys supplied by engine
+`vc.list` : list of additional parameter keys supplied by engine
 
 `nv.active` : list of active voices, populated via engine polls
 

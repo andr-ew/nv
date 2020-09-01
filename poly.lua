@@ -17,6 +17,7 @@ function init()
  
     params:add {
         id="cut",
+        type='control',
         controlspec = controlspec.new(0, 32, "lin", 0, 8, ''),
         action = function(v)
             nv.all.cut = v
@@ -25,6 +26,7 @@ function init()
     }
     params:add {
         id="lvl",
+        type='control',
         controlspec = controlspec.new(0, 1, "lin", 0, 1, ''),
         action = function(v)
             nv.all.lvl = v * 0.75
@@ -33,6 +35,7 @@ function init()
     }
     params:add {
         id="pitchbend",
+        type='control',
         controlspec = controlspec.BIPOLAR,
         action = function(v)
             nv.all.hz = math.pow(2, v) -- actual hz is vc.hz * all.hz
@@ -41,6 +44,7 @@ function init()
     }
     params:add {
         id="cut_span",
+        type='control',
         controlspec = controlspec.new(0, 4, "lin", 0, 0, ''),
         action = function(v)
             for i,vc in ipairs(nv.vc) do

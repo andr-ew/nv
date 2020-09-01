@@ -17,6 +17,7 @@ function init()
  
     params:add {
         id="cut1",
+        type='control',
         controlspec = controlspec.new(0, 32, "lin", 0, 8, ''),
         action = function(v)
             nv.vc[1].cut = v
@@ -25,6 +26,7 @@ function init()
     }
     params:add {
         id="lvl1",
+        type='control',
         controlspec = controlspec.new(0, 1, "lin", 0, 1, ''),
         action = function(v)
             nv.vc[1].lvl = v
@@ -33,6 +35,7 @@ function init()
     }
     params:add {
         id="cut2",
+        type='control',
         controlspec = controlspec.new(0, 32, "lin", 0, 8, ''),
         action = function(v)
             nv.vc[2].cut = v
@@ -41,6 +44,7 @@ function init()
     }
     params:add {
         id="lvl2",
+        type='control',
         controlspec = controlspec.new(0, 1, "lin", 0, 1, ''),
         action = function(v)
             nv.vc[2].lvl = v

@@ -1,5 +1,5 @@
 tab = require 'tabutil'
 
-engine.name = 'Nv'
+engine.name = 'NvPolySub'
 
 function init() end

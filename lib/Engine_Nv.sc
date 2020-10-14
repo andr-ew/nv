@@ -2,7 +2,7 @@
 
 Engine_Nv : CroneEngine {
 
-	classvar <numVoices = 16;
+	var <numVoices = 16;
 	
 	var <voice; //voice array
 	var <param; //param array of dictionaries
@@ -12,6 +12,7 @@ Engine_Nv : CroneEngine {
 		^super.new(context, callback);
 	}
 	
+	/*
 	synthFunc {
 	  arg peak = 1, hz = 440;
 	  var sig, env;
@@ -19,6 +20,7 @@ Engine_Nv : CroneEngine {
 	  sig = SinOsc.ar(hz) * env;
 	  Out.ar(context.out_b.index, sig!2);
 	}
+	*/
 	
 	alloc {
 	  voice = Array.newClear(numVoices);
@@ -39,7 +41,13 @@ Engine_Nv : CroneEngine {
 	    dict;
     });
 	  
-    def = SynthDef.new(\nvdef, this.synthFunc).add;
+    def = SynthDef.new(\nvdef, {
+	    arg peak = 1, hz = 440;
+	    var sig, env;
+	    env = EnvGen.kr(Env.asr(0.01, peak, 0.01), peak, doneAction:2);
+	    sig = SinOsc.ar(hz) * env;
+	    Out.ar(context.out_b.index, sig!2);
+	  }).add;
     
     this.addCommand(\start, "if", { arg msg;
 		  this.startVoice(msg[1], msg[2]);

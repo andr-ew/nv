@@ -1,4 +1,4 @@
-// a subtractive polysynth engine
+// nv superclass
 
 Engine_Nv : CroneEngine {
     
@@ -30,6 +30,18 @@ Engine_Nv : CroneEngine {
         voice[n] = Synth.new(\nvdef, param[n].getPairs);
         NodeWatcher.register(voice[n]);
     }
+    
+    startAll { arg peak;
+        voice.do({ arg vc, n;
+            if(vc.isPlaying, {
+                vc.set(\peak, -1)
+            });
+
+            param[n][\peak] = peak;
+            voice[n] = Synth.new(\nvdef, param[n].getPairs);
+            NodeWatcher.register(voice[n]);
+        });
+    }
 
     setVoice { arg n, name, v;
 
@@ -37,6 +49,18 @@ Engine_Nv : CroneEngine {
 
         if(voice[n].isPlaying, {
             voice[n].set(name, v)
+        });
+    }
+
+    setAll { arg name, v, span = 0;
+        param.do({ arg p, n;
+             p[name] = v + (((n/numVoices) - 0.5) * span)
+        });
+        
+        voice.do({ arg vc, n;
+            if(vc.isPlaying, {
+                vc.set(name, param[n][name])
+            });
         });
     }
 	
@@ -65,6 +89,10 @@ Engine_Nv : CroneEngine {
               this.startVoice(msg[1], msg[2]);
         });
 
+        this.addCommand(\nv_all_start, "f", { arg msg;
+              this.startAll(msg[1]);
+        });
+
         def.allControlNames.do({ arg ctl;
             var name;
 
@@ -72,6 +100,10 @@ Engine_Nv : CroneEngine {
             
             this.addCommand("nv_" ++ name, "if", { arg msg;
                   this.setVoice(msg[1], name, msg[2]);
+            });
+
+            this.addCommand("nv_all_" ++ name, "ff", { arg msg;
+                  this.setAll(name, msg[1], msg[2]);
             });
         });
 	}

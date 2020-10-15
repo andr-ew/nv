@@ -17,11 +17,11 @@ n voice library
 
 `.peak()` : required prameter, specifies the peak of an envelope or volume of a sound, peak > 0 starts a sound peak = 0 stops the sound, peak <= -1 kills a sound
 
+`nv.id(id)` : voice allocator, assigns an id to a free voice & returns the voice if id does not exist, or returns active voice if exists
+
 `nv.active` : list of active voices
 
 `nv.free`: list of free voices
-
-`nv.id(id)` : voice allocator, assigns an id to a free voice & returns the voice if id does not exist, or returns active voice if exists
 
 `nv.add_params(arg)` : add params for either a voice number or all commands when `arg` = `"all"`
 

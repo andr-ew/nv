@@ -1,24 +1,32 @@
 # nv
 n voice library
 
-`nv.name(name)` : select engine from the nv lib
+`nv.name(name)` : set engine name
 
-`nv.init(n)` : initialize n voices
+`nv.n()` : set engine voice count
 
-`nv.vc` : list of voices and parameters per voice (e.g. `nv.vc[1].hz = 440` )
+`nv[1]` : get voice 1
 
-`nv.all` : list of global parameters, summed (multiplied if `.hz`) with voice parameters per voice
+`nv.list_commands()` : print available voice commands (there may be more params in the engine not related to voices)
 
-`.hz` : required parameter, frequency in hz
+`nv[1].command(0.5)` : set a command named 'command' on voice 1 to 0.5
 
-`.peak` : required prameter, specifies the peak of an envelope or volume of a sound
+`nv.all.command(0.5)` : set `command` to 0.5 on all voices. optional second `span` parameter spreads the values evenly across all voices by a given amount
 
-`vc.list` : list of additional parameter keys supplied by engine
+`.hz()` : required parameter, frequency in hz
 
-`nv.active` : list of active voices, populated via engine polls
+`.peak()` : required prameter, specifies the peak of an envelope or volume of a sound, peak > 0 starts a sound, peak = 0 stops the sound, peak <= -1 kills a sound
 
-`nv.free`: list of free voices, populated via engine pools
+`nv.id(id)` : voice allocator, assigns an id to a free voice & returns the voice if id does not exist, or returns active voice if exists
 
-`nv.id(id)` : voice allocator, assigns an id to a free voice & returns the voice if id does not exist, or returns actice voice if exists
+`nv.active` : list of active voices
 
-`nv.update()` : sends table data to supercollider
+`nv.free`: list of free voices
+
+`nv.add_params(arg)` : add params for either a voice number or all commands when `arg` = `"all"`
+
+`nv.add_params_switch()` : set up the params to switch between all of the nv engines within a script
+
+`nv.engines` : list of engines in the nv library (as reflected by `lib/spec`)
+
+`nv.spec[name]` : list of controlspecs for the engine name, if it exists

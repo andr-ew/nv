@@ -1,24 +1,30 @@
 # nv
 n voice library
 
-`nv.name(name)` : select engine from the nv lib
+`nv.name(name)` : set engine name
 
-`nv.init(n)` : initialize n voices
+`nv.n()` : set engine voice count
 
-`nv.vc` : list of voices and parameters per voice (e.g. `nv.vc[1].hz = 440` )
+`nv[1]` : get voice 1
 
-`nv.all` : list of global parameters, summed (multiplied if `.hz`) with voice parameters per voice
+`nv[1].param(0.5)` : set a parameter named 'param' on voice 1 to 0.5
 
-`.hz` : required parameter, frequency in hz
+`nv.all.param(0.5)` : set `param` to 0.5 on all voices. optional second `span` parameter spreads the values evenly across all voices by a given amount
 
-`.peak` : required prameter, specifies the peak of an envelope or volume of a sound
+`.hz()` : required parameter, frequency in hz
 
-`vc.list` : list of additional parameter keys supplied by engine
+`.peak()` : required prameter, specifies the peak of an envelope or volume of a sound, peak > 0 starts a sound peak = 0 stops the sound, peak <= -1 kills a sound
 
-`nv.active` : list of active voices, populated via engine polls
+`nv.active` : list of active voices
 
-`nv.free`: list of free voices, populated via engine pools
+`nv.free`: list of free voices
 
 `nv.id(id)` : voice allocator, assigns an id to a free voice & returns the voice if id does not exist, or returns actice voice if exists
 
-`nv.update()` : sends table data to supercollider
+`nv.add_params(arg)` : add params for either a supplied voice or the all commands when `arg` = `"all"`
+
+`nv.add_params_switch()` : set up the params to switch between all of the nv engines within a script
+
+`nv.engines` : list of engines in the nv library (as reflected by `lib/spec`)
+
+`nv.spec[name]` : list of controlspecs for the engine name, if it exists

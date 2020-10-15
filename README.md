@@ -19,7 +19,7 @@ n voice library
 
 `nv.free`: list of free voices
 
-`nv.id(id)` : voice allocator, assigns an id to a free voice & returns the voice if id does not exist, or returns actice voice if exists
+`nv.id(id)` : voice allocator, assigns an id to a free voice & returns the voice if id does not exist, or returns active voice if exists
 
 `nv.add_params(arg)` : add params for either a voice number or all commands when `arg` = `"all"`
 

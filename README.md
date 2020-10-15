@@ -15,7 +15,7 @@ n voice library
 
 `.hz()` : required parameter, frequency in hz
 
-`.peak()` : required prameter, specifies the peak of an envelope or volume of a sound, peak > 0 starts a sound peak = 0 stops the sound, peak <= -1 kills a sound
+`.peak()` : required prameter, specifies the peak of an envelope or volume of a sound, peak > 0 starts a sound, peak = 0 stops the sound, peak <= -1 kills a sound
 
 `nv.id(id)` : voice allocator, assigns an id to a free voice & returns the voice if id does not exist, or returns active voice if exists
 

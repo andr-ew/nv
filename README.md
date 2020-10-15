@@ -21,7 +21,7 @@ n voice library
 
 `nv.id(id)` : voice allocator, assigns an id to a free voice & returns the voice if id does not exist, or returns actice voice if exists
 
-`nv.add_params(arg)` : add params for either a supplied voice or the all commands when `arg` = `"all"`
+`nv.add_params(arg)` : add params for either a voice number or all commands when `arg` = `"all"`
 
 `nv.add_params_switch()` : set up the params to switch between all of the nv engines within a script
 

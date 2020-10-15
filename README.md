@@ -7,9 +7,11 @@ n voice library
 
 `nv[1]` : get voice 1
 
-`nv[1].param(0.5)` : set a parameter named 'param' on voice 1 to 0.5
+`nv.list_commands()` : print available voice commands (there may be more params in the engine not related to voices, check `engine.list_commands()`)
 
-`nv.all.param(0.5)` : set `param` to 0.5 on all voices. optional second `span` parameter spreads the values evenly across all voices by a given amount
+`nv[1].command(0.5)` : set a command named 'command' on voice 1 to 0.5
+
+`nv.all.command(0.5)` : set `command` to 0.5 on all voices. optional second `span` parameter spreads the values evenly across all voices by a given amount
 
 `.hz()` : required parameter, frequency in hz
 

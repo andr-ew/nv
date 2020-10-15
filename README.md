@@ -7,7 +7,7 @@ n voice library
 
 `nv[1]` : get voice 1
 
-`nv.list_commands()` : print available voice commands (there may be more params in the engine not related to voices, check `engine.list_commands()`)
+`nv.list_commands()` : print available voice commands (there may be more params in the engine not related to voices)
 
 `nv[1].command(0.5)` : set a command named 'command' on voice 1 to 0.5
 

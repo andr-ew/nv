@@ -20,15 +20,36 @@ Engine_Nv : CroneEngine {
         Out.ar(context.out_b.index, sig!2);
     }}
 
+    setVoiceCount { arg count; 
+        numVoices = count;
+
+        this.setAll("peak", 0, 0);
+        voice = List.newClear(numVoices);
+        param = List.new();
+          
+        count.do({ arg n;
+            var dict = Dictionary.new;
+
+            def.allControlNames.do({ arg ctl;
+                dict.put(ctl.name, ctl.defaultValue);
+            });
+
+            param.add(dict);
+        });
+    }
+
     startVoice { arg n, peak;
       
-        if(voice[n].isPlaying, {
-            voice[n].set(\peak, -1); // ?
-        });
+        if(n < numVoices, {
+            if(voice[n].isPlaying, {
+                voice[n].set(\peak, -1); // ?
+            });
 
-        param[n][\peak] = peak;
-        voice[n] = Synth.new(\nvdef, param[n].getPairs);
-        NodeWatcher.register(voice[n]);
+            param[n][\peak] = peak;
+            voice[n] = Synth.new(\nvdef, param[n].getPairs);
+            NodeWatcher.register(voice[n]);
+
+        }, { postln("voice " ++ n ++ " out of range") });
     }
     
     startAll { arg peak;
@@ -45,11 +66,15 @@ Engine_Nv : CroneEngine {
 
     setVoice { arg n, name, v;
 
-        param[n][name] = v;
+        if(n < numVoices, {
 
-        if(voice[n].isPlaying, {
-            voice[n].set(name, v)
-        });
+            param[n][name] = v;
+
+            if(voice[n].isPlaying, {
+                voice[n].set(name, v)
+            });
+    
+        }, { postln("voice " ++ n ++ " out of range") });
     }
 
     setAll { arg name, v, span = 0;
@@ -66,27 +91,15 @@ Engine_Nv : CroneEngine {
 	
 	alloc {
         def = SynthDef.new(\nvdef, this.synthFunc()).add;
-
-        voice = Array.newClear(numVoices);
-          
-        param = Array.fill(numVoices, {
-            var dict;
-            dict = Dictionary.new;
-
-            def.allControlNames.do({ arg ctl;
-                var name, val;
-
-                name = ctl.name;
-                val = ctl.defaultValue;
-                
-                dict.put(name, val);
-            });
-
-            dict;
-        });
+        
+        this.setVoiceCount(numVoices);
 
         this.addCommand(\nv_start, "if", { arg msg;
               this.startVoice(msg[1], msg[2]);
+        });
+
+        this.addCommand(\nv_voicecount, "i", { arg msg;
+              this.setVoiceCount(msg[1]);
         });
 
         this.addCommand(\nv_all_start, "f", { arg msg;

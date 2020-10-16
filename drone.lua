@@ -1,4 +1,5 @@
 -- nv drone
+-- WARNING: turn down norns levels before proceeding !!
 
 nv = include 'lib/nv'
 controlspec = require 'controlspec'

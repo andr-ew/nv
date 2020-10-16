@@ -1,14 +1,13 @@
 // a subtractive polysynth engine
 
 Engine_NvPolySub : Engine_Nv {
-    var <numVoices = 16;
-	
+
 	*new { arg context, callback;
 		^super.new(context, callback);
 	}
 	
 	synthFunc {^{
-        arg peak=1, hz=440, level=0.2, // the basics
+        arg peak=1, hz=0, level=0.2, // the basics
         shape=0.0, // base waveshape selection
         timbre=0.5, // modulation of waveshape
         sub=0.4, // sub-octave sine level

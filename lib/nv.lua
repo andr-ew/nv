@@ -1,54 +1,74 @@
-nv = {
-    list = { -- populated by synth choice, should align w/ supplied param ids
-        'lvl',
-        'cut' 
-    },
-    all = {},
-    vc = {},
-    free = {},
-    active = {}
-}
+local voicelib = require 'voice'
+local voice = {} -- voice allocator
 
-function nv.name() end -- checks for engine entry in lib & sets engine.name
+local s = {} -- supertype thing
+local nv = {}
 
-function nv.init(count)
-    nv.all.hz = 0
-    nv.all.peak = 0        
+setmetatable(nv, { __index = s })
 
-    for _,v in ipairs(nv.list) do 
-        nv.all[v] = 0
+function s.name(name) 
+    engine.name = name
+end
+
+s.count = 16
+
+function s.init(count) 
+    s.count = count
+    engine.nv_voicecount(count)
+    voice = voicelib.new(count)
+    
+    for i = 1, count do 
+        local n = i -- upvalue for the closure
+        nv[i] = {}
+
+        setmetatable(nv[i], { __index = function(t, k) 
+            return function(v) 
+                if k == "peak" then
+                    if v > 0 then 
+                        -- voice allocator stuff here ? what if this voice wasn't allocated ?
+
+                        engine.nv_start(n, v)
+                    else
+                        for k,w in pairs(voice.pairings) do 
+                            if w.id == n then
+                                local slot = voice:pop(k)
+                                voice:release(slot)
+                            end
+                        end
+                        
+                        engine["nv_peak"](n, v)
+                    end
+                else 
+                    if engine["nv_" .. k] then
+                        engine["nv_" .. k](n, v)
+                    else
+                        print("nv: command ".. tostring(k) .." does not exist")
+                    end
+                end
+            end
+        end })
     end
-
-    for i = 1, count do
-        nv.vc[i] = {}
-        nv.vc[i].hz = 0
-        nv.vc[i].peak = 0
-
-        nv.vc[i].id = nil
-        nv.vc[i].active = 0
-
-        for _,v in ipairs(nv.list) do 
-            nv.vc[i][v] = 0
-        end
-
-        nv.free[i] = nv.vc[i]
-    end    
 end
 
-function nv.id(id) -- voice allocator, returns active voice if id exists or free voice if new
-    return nv.free[1] -- dummy function
+s.all = {}
+
+setmetatable(s.all, { __index = function(t, k) 
+    if k == "peak" then return engine.nv_all_start
+    else return engine["nv_all_" .. k] or function() 
+        print("nv: command ".. tostring(k) .." does not exist") end 
+    end
+end })
+
+function s.id(key) 
+    local slot
+    slot = voice.pairings[key]
+    
+    if not slot then 
+        slot = voice:get()
+        voice:push(key, slot)
+    end
+        
+    return nv[slot.id]
 end
-
-function nv.update() 
-    for i,vc in ipairs(nv.vc) do 
-        print('vc ' .. i)
-        print('hz ' .. nv.all.hz * vc.hz)
-        print('peak ' .. nv.all.peak + vc.peak)
-
-        for _,v in pairs(nv.list) do
-            print(v .. ' ' .. vc[v] + nv.all[v])
-        end    
-    end 
-end 
 
 return nv

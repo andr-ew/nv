@@ -6,14 +6,17 @@ Engine_Nv : CroneEngine {
 	
     var <numVoices = 16;
 	var <voice; //voice array
-	var <param; //param array of dictionaries
+
+	var <paramVoice; //param array of dictionaries (value per voice)
+    var <paramAll; //dictionary of param global offsets
+    var <mixVoice; //param mixed value per voice
 	
 	*new { arg context, callback;
 		^super.new(context, callback);
 	}
 	
 	synthFunc {^{
-        arg peak = 1, hz = 440;
+        arg peak = 1, hz = 0;
         var sig, env;
         env = EnvGen.kr(Env.asr(0.01, peak, 0.01), peak, doneAction:2);
         sig = SinOsc.ar(hz) * env;
@@ -22,31 +25,48 @@ Engine_Nv : CroneEngine {
 
     setVoiceCount { arg count; 
         numVoices = count;
+        
+		voice.do({ arg v;
+		  if(v.isPlaying, {
+		    v.free;
+		  });
+		});
 
-        this.setAll("peak", 0, 0);
         voice = List.newClear(numVoices);
-        param = List.new();
+        paramVoice = List.new();
+        mixVoice = List.new();
           
         count.do({ arg n;
-            var dict = Dictionary.new;
+            var pv = Dictionary.new;
+            var mv = Dictionary.new;
 
             def.allControlNames.do({ arg ctl;
-                dict.put(ctl.name, ctl.defaultValue);
+                pv.put(ctl.name, 0);
+                mv.put(ctl.name, ctl.defaultValue);
             });
 
-            param.add(dict);
+            paramVoice.add(pv);
+            mixVoice.add(mv);
+        });
+
+        paramAll = Dictionary.new;
+
+        def.allControlNames.do({ arg ctl;
+            paramAll.put(ctl.name, ctl.defaultValue);
         });
     }
 
     startVoice { arg n, peak;
-      
-        if(n < numVoices, {
+        if(n < numVoices, {            
+
             if(voice[n].isPlaying, {
                 voice[n].set(\peak, -1); // ?
             });
 
-            param[n][\peak] = peak;
-            voice[n] = Synth.new(\nvdef, param[n].getPairs);
+            paramVoice[n][\peak] = peak;
+            mixVoice[n][\peak] = peak + paramAll[\peak];
+
+            voice[n] = Synth.new(\nvdef, mixVoice[n].getPairs);
             NodeWatcher.register(voice[n]);
 
         }, { postln("voice " ++ n ++ " out of range") });
@@ -57,34 +77,47 @@ Engine_Nv : CroneEngine {
             if(vc.isPlaying, {
                 vc.set(\peak, -1)
             });
+            
+            paramAll[\peak] = peak;
+            mixVoice[n][\peak] = peak + paramVoice[n][\peak];
 
-            param[n][\peak] = peak;
-            voice[n] = Synth.new(\nvdef, param[n].getPairs);
+            voice[n] = Synth.new(\nvdef, mixVoice[n].getPairs);
             NodeWatcher.register(voice[n]);
         });
     }
 
     setVoice { arg n, name, v;
-
         if(n < numVoices, {
+    
+            paramVoice[n][name] = v;
 
-            param[n][name] = v;
+            if(name == "hz", {
+                mixVoice[n][name] = v * paramAll[name];
+            }, {
+                mixVoice[n][name] = v + paramAll[name];
+            });
 
             if(voice[n].isPlaying, {
-                voice[n].set(name, v)
+                voice[n].set(name, mixVoice[n][name]);
             });
     
         }, { postln("voice " ++ n ++ " out of range") });
     }
 
-    setAll { arg name, v, span = 0;
-        param.do({ arg p, n;
-             p[name] = v + (((n/numVoices) - 0.5) * span)
+    setAll { arg name, v;
+        paramAll[name] = v;
+
+        paramVoice.do({ arg p, n;
+            if(name == "hz", {
+                mixVoice[n][name] = v * p[name];
+            }, {
+                mixVoice[n][name] = v + p[name];
+            });
         });
         
         voice.do({ arg vc, n;
             if(vc.isPlaying, {
-                vc.set(name, param[n][name])
+                vc.set(name, mixVoice[n][name])
             });
         });
     }

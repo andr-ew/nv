@@ -3,7 +3,7 @@ n voice library
 
 `nv.name(name)` : set engine name
 
-`nv.n()` : set engine voice count
+`nv.init(count)` : initilize the engine with the specified voice count
 
 `nv[1]` : get voice 1
 

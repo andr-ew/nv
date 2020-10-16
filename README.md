@@ -11,7 +11,7 @@ n voice library
 
 `nv[1].command(0.5)` : set a command named 'command' on voice 1 to 0.5
 
-`nv.all.command(0.5)` : set `command` to 0.5 on all voices. optional second `span` parameter spreads the values evenly across all voices by a given amount
+`nv.all.command(0.5)` : set the `all` value for `command`, which is summed (multiplied if .hz) with the individual voice `command` value
 
 `.hz()` : required parameter, frequency in hz
 

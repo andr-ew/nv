@@ -45,6 +45,12 @@ Engine_Nv : CroneEngine {
                 mv.put(ctl.name, ctl.defaultValue);
             });
 
+            pv[\peak] = 0;
+            mv[\peak] = 0;
+            
+            pv[\hz] = 0;
+            mv[\hz] = 0;
+
             paramVoice.add(pv);
             mixVoice.add(mv);
         });
@@ -54,6 +60,9 @@ Engine_Nv : CroneEngine {
         def.allControlNames.do({ arg ctl;
             paramAll.put(ctl.name, ctl.defaultValue);
         });
+            
+        paramAll[\peak] = 0;
+        paramAll[\hz] = 0;
     }
 
     startVoice { arg n, peak;
@@ -148,8 +157,8 @@ Engine_Nv : CroneEngine {
                   this.setVoice(msg[1], name, msg[2]);
             });
 
-            this.addCommand("nv_all_" ++ name, "ff", { arg msg;
-                  this.setAll(name, msg[1], msg[2]);
+            this.addCommand("nv_all_" ++ name, "f", { arg msg;
+                  this.setAll(name, msg[1]);
             });
         });
 	}

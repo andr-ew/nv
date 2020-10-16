@@ -9,7 +9,7 @@ nv.name 'NvPolySub'
 keyboard = midi.connect()
 
 function init()
-    nv.n(8) -- 8 voice polyphony
+    nv.init(8) -- 8 voice polyphony
 
     --nv.params() --add the author supplied params instead of rolling your own
 

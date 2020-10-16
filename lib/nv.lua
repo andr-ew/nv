@@ -27,7 +27,7 @@ function s.init(count)
                     if v > 0 then 
                         -- voice allocator stuff here ? what if this voice wasn't allocated ?
 
-                        engine.nv_start(n, v)
+                        engine.nv_start(n - 1, v)
                     else
                         for k,w in pairs(voice.pairings) do 
                             if w.id == n then
@@ -36,11 +36,11 @@ function s.init(count)
                             end
                         end
                         
-                        engine["nv_peak"](n, v)
+                        engine["nv_peak"](n - 1, v)
                     end
                 else 
                     if engine["nv_" .. k] then
-                        engine["nv_" .. k](n, v)
+                        engine["nv_" .. k](n - 1, v)
                     else
                         print("nv: command ".. tostring(k) .." does not exist")
                     end

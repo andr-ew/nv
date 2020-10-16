@@ -7,7 +7,7 @@ Engine_NvPolySub : Engine_Nv {
 	}
 	
 	synthFunc {^{
-        arg peak=1, hz=0, level=0.2, // the basics
+        arg peak=0, hz=0, level=0.2, // the basics
         shape=0.0, // base waveshape selection
         timbre=0.5, // modulation of waveshape
         sub=0.4, // sub-octave sine level

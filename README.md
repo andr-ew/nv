@@ -1,5 +1,6 @@
 # nv
-n voice library
+
+collected voice engines and shared syntax for monome norns
 
 `nv.name(name)` : set engine name
 

@@ -2,6 +2,8 @@
 
 collected voice engines and shared syntax for monome norns
 
+# usage
+
 `nv.name(name)` : set engine name
 
 `nv.init(count)` : initilize the engine with the specified voice count

@@ -1,6 +1,6 @@
 # nv
 
-collected voice engines and shared syntax for monome norns
+collected voice engines with shared syntax for monome norns
 
 # usage
 
